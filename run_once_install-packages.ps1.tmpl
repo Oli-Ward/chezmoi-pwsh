@@ -1,0 +1,60 @@
+{{- if eq .chezmoi.os "windows" -}}
+#Requires -Version 7
+# Installs the tools and PowerShell modules that the PowerShell profile relies on.
+#
+# Managed by chezmoi as a run_once_ script: it runs automatically the first time
+# you `chezmoi apply` on a machine (e.g. after `chezmoi init --apply <repo>`).
+# It is idempotent, so running it again by hand is safe:
+#     pwsh -NoProfile -File run_once_install-packages.ps1.tmpl   # (after rendering)
+# or just re-run `chezmoi apply` after bumping the version comment below.
+#
+# Bump this when you change the package list to force a re-run via run_onchange semantics:
+# package-list-version: 1
+
+$ErrorActionPreference = 'Stop'
+
+function Install-WingetPackage {
+    param([Parameter(Mandatory)][string]$Id)
+    winget list --id $Id --exact --accept-source-agreements *> $null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "[skip]    $Id (already installed)"
+        return
+    }
+    Write-Host "[install] $Id"
+    winget install --id $Id --exact --silent `
+        --accept-source-agreements --accept-package-agreements --disable-interactivity
+}
+
+Write-Host "== winget packages =="
+Install-WingetPackage 'JanDeDobbeleer.OhMyPosh'   # oh-my-posh prompt
+Install-WingetPackage 'ajeetdsouza.zoxide'        # zoxide (smart cd)
+Install-WingetPackage 'junegunn.fzf'              # fzf (required by PSFzf)
+
+Write-Host "== PowerShell modules (CurrentUser) =="
+$modules = 'posh-git', 'PSFzf', 'Terminal-Icons', 'DockerCompletion'
+if ((Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue).InstallationPolicy -ne 'Trusted') {
+    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+}
+foreach ($m in $modules) {
+    if (Get-Module -ListAvailable -Name $m) {
+        Write-Host "[skip]    module $m (already installed)"
+    } else {
+        Write-Host "[install] module $m"
+        Install-Module -Name $m -Scope CurrentUser -Force -AllowClobber
+    }
+}
+
+Write-Host "== npm CLIs =="
+if (Get-Command npm -ErrorAction SilentlyContinue) {
+    if (Get-Command gitmoji -ErrorAction SilentlyContinue) {
+        Write-Host "[skip]    gitmoji-cli (already installed)"
+    } else {
+        Write-Host "[install] gitmoji-cli"
+        npm install -g gitmoji-cli
+    }
+} else {
+    Write-Host "[warn]    npm not found; skipping gitmoji-cli (install Node.js, then: npm i -g gitmoji-cli)"
+}
+
+Write-Host "Done. Restart your shell to pick up new tools."
+{{- end -}}

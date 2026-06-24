@@ -1,0 +1,69 @@
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editors
+*.code-workspace
+my_scripts
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Environment / secrets
+.env
+*.local
+*.key
+*.pem
+*.pfx
+*.p12
+secrets.json
+
+# Node / JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+.sass-cache/
+
+# Rider / JetBrains
+*.DotSettings.user
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Postman local/cache metadata
+postman/.postman/
+.postman/
+
+# Misc local files
+*.tmp
+*.temp
+.cache/
+
+.pnpm-store

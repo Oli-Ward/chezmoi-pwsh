@@ -1,0 +1,15 @@
+[core]
+	excludesfile = C:/Users/oliw/.gitignore_global
+	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+	editor = code --wait
+[user]
+	email = oliver@cleverfirstaid.com
+	name = Oli Ward
+[push]
+	autoSetupRemote = true
+[pull]
+	rebase = true
+[rebase]
+	autoStash = true
+[safe]
+	directory = %(prefix)///wsl.localhost/Ubuntu/home/oliw/code/medkit

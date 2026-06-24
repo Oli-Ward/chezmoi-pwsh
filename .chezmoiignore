@@ -1,0 +1,8 @@
+# Repo files that are not dotfiles to deploy
+README.md
+sync-skills-from-wsl.ps1
+
+# Local-only secrets — never managed or deployed by chezmoi.
+# See dot_secrets.ps1.example (deploys to ~/.secrets.ps1.example) for the
+# variable names. Copy that to ~/.secrets.ps1 and fill in real values.
+.secrets.ps1
